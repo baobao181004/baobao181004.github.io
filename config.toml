@@ -1,0 +1,48 @@
+# --- 1. CẤU HÌNH CHUNG (PHẢI ĐỂ ĐẦU TIÊN) ---
+baseURL = "http://localhost:1313/"
+languageCode = "vi-VN"
+title = "Phạm Trần Hưng Bảo"
+theme = "hugo-blog-awesome"
+copyright = "© 2025 Phạm Trần Hưng Bảo"
+
+# --- 2. CẤU HÌNH THÔNG SỐ (PARAMS) ---
+[params]
+  description = "Chuyên gia phát triển hệ thống với Java & JavaScript."
+  # Ảnh này phải nằm ở: static/images/123.jpg
+  heroImage = "/images/123.jpg"
+  
+  # Chế độ tối/sáng (auto/dark/light)
+  defaultTheme = "auto"
+
+[params.author]
+  name = "Phạm Trần Hưng Bảo"
+  intro = "Phạm Trần Hưng Bảo"
+  description = "Ngày sinh: 18/10/2004 | TP.Hồ Chí Minh | Full Stack Developer"
+  avatar = "/images/123.jpg"
+
+# --- 3. MENU ---
+[menu]
+  [[menu.main]]
+    name = "Home"
+    url = "/"
+    weight = 1
+
+  [[menu.main]]
+    name = "Blog"
+    url = "/posts/"
+    weight = 2
+
+  [[menu.main]]
+    name = "About"
+    url = "/about/"
+    weight = 3
+
+[markup]
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+      unsafe = true
+  [markup.highlight]
+    # Dùng style 'github' cho chế độ sáng
+    style = "github"
+    # Quan trọng: Đổi thành true để theme tự quản lý class màu sắc
+    noClasses = true

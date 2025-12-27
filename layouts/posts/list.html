@@ -1,0 +1,198 @@
+{{ define "main" }}
+<style>
+    /* --- 1. CHỈNH MÀU NỀN THẺ (KHÔNG DÙNG MÀU TRẮNG NỮA) --- */
+    
+    /* Mặc định (Chế độ Sáng) */
+    :root {
+       /* ĐỔI MÀU Ở ĐÂY: Dùng màu Xám Khói thay vì Trắng */
+       --card-bg-custom: #e3e5e8; 
+       
+       /* Viền thẻ: Xám nhạt */
+       --card-border-custom: #e5e7eb; 
+       
+       /* Bóng đổ: Nhẹ nhàng */
+       --card-shadow-custom: 0 4px 6px rgba(0,0,0,0.05); 
+    }
+
+    /* Chế độ Tối (Dark Mode) */
+    html.dark {
+       /* Nền thẻ tối: Xám đen đậm (cho nổi trên nền đen tuyền) */
+       --card-bg-custom: #1f2937; 
+       --card-border-custom: #374151;
+       --card-shadow-custom: 0 4px 20px rgba(0,0,0,0.5); 
+    }
+
+    /* --- 2. CẤU TRÚC CHUNG --- */
+    .list-container {
+        max-width: 1100px;
+        margin: 3rem auto;
+        padding: 0 1rem;
+    }
+
+    .page-title {
+        font-size: 2rem;
+        margin-bottom: 2.5rem;
+        text-align: center;
+        /* Gradient Cam - Hồng */
+        background: linear-gradient(to right, #ff8a00, #da1b60);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        font-weight: 800;
+    }
+
+    .post-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 1.5rem;
+    }
+
+    /* --- 3. THIẾT KẾ THẺ (CARD) --- */
+    .post-card {
+        display: flex;
+        flex-direction: column;
+        text-decoration: none;
+        
+        background-color: var(--card-bg-custom);
+        border: 1px solid var(--card-border-custom);
+        box-shadow: var(--card-shadow-custom);
+        
+        border-radius: 16px;
+        overflow: hidden;
+        transition: all 0.3s ease;
+        height: 100%;
+        position: relative;
+    }
+
+    /* HOVER: Hiệu ứng Cam - Hồng */
+    .post-card:hover {
+        transform: translateY(-7px);
+        box-shadow: 0 15px 35px rgba(255, 138, 0, 0.15); 
+        border-color: #ff8a00;
+        /* Khi hover thì làm nền sáng lên một chút cho đẹp */
+        filter: brightness(1.02);
+    }
+
+    /* Ảnh đại diện */
+    .card-image {
+        width: 100%;
+        height: 150px;
+        overflow: hidden;
+        background-color: var(--card-bg-custom);
+        border-bottom: 1px solid var(--card-border-custom);
+    }
+
+    .card-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.5s ease;
+    }
+
+    .post-card:hover .card-image img {
+        transform: scale(1.1);
+    }
+
+    /* Nội dung */
+    .card-content {
+        padding: 1.2rem;
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+    }
+
+    .post-card h2 {
+        font-size: 1.15rem;
+        margin: 0 0 0.6rem 0;
+        line-height: 1.35;
+        color: var(--color-text);
+        font-weight: 700;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        transition: color 0.3s;
+    }
+
+    /* Hover tiêu đề chuyển màu Cam */
+    .post-card:hover h2 {
+        color: #ff8a00;
+    }
+
+    .post-summary {
+        font-size: 0.9rem;
+        color: var(--color-text-secondary);
+        margin-bottom: 1rem;
+        line-height: 1.5;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        flex-grow: 1;
+    }
+
+    /* Chân thẻ */
+    .card-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: auto;
+        font-size: 0.8rem;
+        border-top: 1px solid var(--card-border-custom);
+        padding-top: 0.8rem;
+        color: var(--color-text-secondary);
+    }
+
+    /* Nút Xem thêm */
+    .read-more-text {
+        color: #da1b60; /* Hồng */
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        gap: 3px;
+        transition: color 0.3s;
+    }
+    .post-card:hover .read-more-text {
+        color: #ff8a00; /* Cam */
+    }
+
+</style>
+
+<div class="list-container">
+    <h1 class="page-title">Kho Bài Viết</h1>
+    
+    <div class="post-grid">
+        {{ range .Pages }}
+        <a href="{{ .Permalink }}" class="post-card">
+            
+            {{ if .Params.featured_image }}
+            <div class="card-image">
+                <img src="{{ .Params.featured_image }}" alt="{{ .Title }}" loading="lazy">
+            </div>
+            {{ else }}
+            <div class="card-image" style="display:flex; align-items:center; justify-content:center; color:var(--color-text-secondary); font-size: 2rem;">
+                <span>📝</span>
+            </div>
+            {{ end }}
+
+            <div class="card-content">
+                <h2>{{ .Title }}</h2>
+                
+                <p class="post-summary">
+                    {{ if .Summary }}
+                        {{ .Summary | plainify | truncate 90 }} 
+                    {{ else }}
+                        Nội dung tóm tắt bài viết...
+                    {{ end }}
+                </p>
+                
+                <div class="card-footer">
+                    <span>📅 {{ .Date.Format "02/01/2006" }}</span>
+                    <span class="read-more-text">Xem thêm ›</span>
+                </div>
+            </div>
+        </a>
+        {{ end }}
+    </div>
+</div>
+{{ end }}
